@@ -1,0 +1,11 @@
+.foodBtn{
+    margin: 5px;
+    font-size: 40px;
+    background-color: brown;
+    color: white;
+}
+
+.removeBtn{
+    color: whitesmoke;
+    background-color: cadetblue;
+}
