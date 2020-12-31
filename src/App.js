@@ -21,29 +21,46 @@ const App = () => {
     return acc+(order.count*order.price);
   },0)
 
+  const changingFoodsCount = id =>{
+    const index = foods.findIndex(p=>p.id===id);
+    const foodsCopy = [...foods];
+    const food = {...foods[index]};
+    food.count = 0;
+    foodsCopy[index]=food;
+    setFoods(foodsCopy);
+  }
+
   const addItem = id =>{
     const index = foods.findIndex(p=>p.id===id);
     const foodsCopy = [...foods];
     const food = {...foods[index]}
-    console.log(food);
-    food.count++
-    const newOrder = {};
-    newOrder.name = food.name;
-    newOrder.price = food.price;
-    newOrder.count = food.count;
-    newOrder.id = food.id;
-    orders.push(newOrder);
-    foodsCopy[index]=food;
-    setFoods(foodsCopy);
+    if (food.count===0){
+      food.count++;   
+      const newOrder = {};
+      newOrder.name = food.name;
+      newOrder.price = food.price;
+      newOrder.count = food.count;
+      newOrder.id = food.id;
+      orders.push(newOrder);
+      foodsCopy[index]=food;
+      setFoods(foodsCopy);
+    } else if (food.count>0){
+      const index = orders.findIndex(p=>p.id===id);
+      const ordersCopy = [...orders];
+      const order = {...orders[index]};
+      order.count++;
+      ordersCopy[index] = order;
+      setOrders(ordersCopy);
+    }
+    
   }
 
   const removeItem = id =>{
     const index = orders.findIndex(p=>p.id===id);
     const ordersCopy = [...orders];
-    const order = {...orders[index]};
-    order.count = 0;
     ordersCopy.splice(index,1);
     setOrders(ordersCopy);
+    changingFoodsCount(id);
   }
 
   let orderList = null;
@@ -81,22 +98,8 @@ const App = () => {
     ))
   );
 
-  // const orderList = (
-  //   orders.map(order=>(
-  //     <OrderList
-  //     key={order.id}
-  //     name={order.name}
-  //     count={order.count}
-  //     price={order.price}
-  //     removeItem={(e)=>removeItem(order.id)}
-  //     >
-  //     </OrderList>
-  //   ))
-  // )
-
   
   comparing();
-
 
   return (
     <div className="App">
