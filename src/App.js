@@ -3,6 +3,7 @@ import { nanoid } from 'nanoid';
 import './App.css'
 import FoodList from './components/FoodList/FoodList';
 import OrderList from './components/OrdersList/OrderList';
+import EmptyOrderList from './components/EmptyOrderList/EmptyOrderList';
 
 const App = () => {
   const [foods, setFoods]=useState([
@@ -23,16 +24,17 @@ const App = () => {
   const addItem = id =>{
     const index = foods.findIndex(p=>p.id===id);
     const foodsCopy = [...foods];
-    const food = {...foods[index]};
-    food.count++;
-    const order = {};
-    order.name = food.name;
-    order.price = food.price;
-    order.count = food.count;
-    order.id = food.id;
-    orders.push(order);
-    foodsCopy[index] = food;
-   setFoods(foodsCopy);   
+    const food = {...foods[index]}
+    console.log(food);
+    food.count++
+    const newOrder = {};
+    newOrder.name = food.name;
+    newOrder.price = food.price;
+    newOrder.count = food.count;
+    newOrder.id = food.id;
+    orders.push(newOrder);
+    foodsCopy[index]=food;
+    setFoods(foodsCopy);
   }
 
   const removeItem = id =>{
@@ -41,9 +43,31 @@ const App = () => {
     const order = {...orders[index]};
     order.count = 0;
     ordersCopy.splice(index,1);
-    ordersCopy[index] = order;
     setOrders(ordersCopy);
-    console.log(orders)
+  }
+
+  let orderList = null;
+
+  const comparing = () =>{
+    if(orders.length===0){
+      orderList=(
+        <EmptyOrderList>
+        </EmptyOrderList>
+      )
+    } else {
+      orderList = (
+        orders.map(order=>(
+          <OrderList
+          key={order.id}
+          name={order.name}
+          count={order.count}
+          price={order.price}
+          removeItem={(e)=>removeItem(order.id)}
+          >
+          </OrderList>
+        ))
+      )
+    }
   }
 
   const foodList = (  
@@ -57,19 +81,21 @@ const App = () => {
     ))
   );
 
-  const orderList = (
-    orders.map(order=>(
-      <OrderList
-      key={order.id}
-      name={order.name}
-      count={order.count}
-      price={order.price}
-      removeItem={(e)=>removeItem(order.id)}
-      >
-      </OrderList>
-    ))
-  )
+  // const orderList = (
+  //   orders.map(order=>(
+  //     <OrderList
+  //     key={order.id}
+  //     name={order.name}
+  //     count={order.count}
+  //     price={order.price}
+  //     removeItem={(e)=>removeItem(order.id)}
+  //     >
+  //     </OrderList>
+  //   ))
+  // )
 
+  
+  comparing();
 
 
   return (
@@ -80,6 +106,7 @@ const App = () => {
           <p>Total:{countPrice}Kgs</p>
         </div>
         <div className="ButtonList">
+         
           {foodList}
         </div>
       </div>
